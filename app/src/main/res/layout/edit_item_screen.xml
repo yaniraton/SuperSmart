@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/appBackgroundColor">
+
+    <!-- Title Section -->
+
+    <!-- Product Image Section -->
+    <ImageView
+        android:id="@+id/ivProductImage"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:contentDescription="Product Image"
+        android:scaleType="centerInside"
+        android:src="@drawable/image" />
+
+    <!-- Barcode Field -->
+
+    <!-- Product Name Field -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5" />
+
+    <EditText
+        android:id="@+id/etProductName"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:backgroundTint="@android:color/darker_gray"
+        android:hint="Enter product name"
+        android:padding="4dp"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- Price Field with Dollar Symbol -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:paddingTop="20dp"
+            android:paddingRight="5dp"
+            android:rotation="0"
+            android:rotationX="0"
+            android:rotationY="0"
+            android:text="₪"
+            android:textAlignment="viewEnd"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/etPrice"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:backgroundTint="@android:color/darker_gray"
+            android:hint="Enter price"
+            android:inputType="numberDecimal"
+            android:padding="4dp"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <!-- Description Field -->
+
+    <EditText
+        android:id="@+id/etDescription"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:backgroundTint="@android:color/darker_gray"
+        android:hint="Enter product description"
+        android:minLines="3"
+        android:padding="4dp"
+        android:textAlignment="center"
+        android:textColor="@android:color/darker_gray" />
+
+    <!-- Save Button -->
+    <EditText
+        android:id="@+id/etBarcode"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:backgroundTint="@android:color/darker_gray"
+        android:hint="Enter barcode"
+        android:inputType="number"
+        android:padding="4dp"
+        android:textAlignment="center"
+        android:textColor="@android:color/black" />
+
+    <Button
+        android:id="@+id/btnSaveItem"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:padding="12dp"
+        android:text="Save"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+</LinearLayout>

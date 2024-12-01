@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Header Section -->
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="Welcome to SuperSmart"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
+
+    <!-- Spacer between header and buttons -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3" />
+
+    <!-- Scan Barcode Button with Icon -->
+    <Button
+        android:id="@+id/btnScanBarcode"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:backgroundTint="@android:color/holo_blue_light"
+        android:drawableLeft="@drawable/barcode"
+        android:text=" Scan Barcode"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <!-- Spacer between buttons -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2" />
+
+    <!-- Identify by Photo Button with Icon -->
+    <Button
+        android:id="@+id/btnIdentifyByPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:drawableLeft="@drawable/camera"
+        android:text=" Identify by Photo"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <!-- Spacer between buttons and footer -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2" />
+
+    <!-- Identify by Photo Button with Icon -->
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:backgroundTint="#FF9800"
+        android:drawableLeft="@drawable/worker"
+        android:text="Manage products"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <!-- Spacer between buttons and footer -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3" />
+
+    <!-- Footer Section -->
+    <TextView
+        android:id="@+id/tvFooter"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:text="Need help? Ask a staff member."
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp" />
+
+</LinearLayout>
