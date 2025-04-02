@@ -30,6 +30,7 @@
         android:layout_weight="1.5"
         android:backgroundTint="@android:color/holo_blue_light"
         android:drawableLeft="@drawable/barcode"
+        android:onClick="openBarcodeScanner"
         android:text=" Scan Barcode"
         android:textColor="@android:color/white"
         android:textSize="18sp" />

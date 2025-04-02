@@ -72,7 +72,8 @@
         android:backgroundTint="#FF9800"
         android:text="Edit product"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/btnBackToHome"
@@ -80,6 +81,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:backgroundTint="@android:color/holo_blue_light"
+        android:onClick="backToHome"
         android:text="Back to Home"
         android:textColor="@android:color/white"
         android:textSize="18sp" />

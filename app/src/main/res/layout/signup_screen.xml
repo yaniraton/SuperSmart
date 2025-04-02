@@ -93,7 +93,7 @@
             android:layout_weight="1"
             android:contentDescription="Email Icon"
             android:padding="8dp"
-            android:src="@drawable/ic_email"
+            android:src="@drawable/email"
             app:srcCompat="@drawable/email" />
 
         <EditText

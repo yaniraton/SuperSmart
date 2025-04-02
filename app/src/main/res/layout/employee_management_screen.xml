@@ -31,7 +31,7 @@
         android:layout_weight="3"
         android:gravity="center"
         android:paddingBottom="16dp"
-        android:text="Hey, <name>!\n Manage your product catalog efficiently with the options below."
+        android:text="Hey, name!\n Manage your product catalog efficiently with the options below."
         android:textColor="@android:color/darker_gray"
         android:textSize="18sp" />
 
