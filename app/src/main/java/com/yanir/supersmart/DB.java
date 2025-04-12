@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class DB {
     // singleton class
@@ -33,6 +34,10 @@ public class DB {
         // refrance to the product in the database
         mDatabase.getReference("products").child(product.getBarcode()).setValue(product);
         Log.d(TAG, "Product added to database");
+    }
+
+    public StorageReference getImage(Product product) {
+        return mStorage.getReference().child("products").child(product.getBarcode() + ".JPG");
     }
 
     // get image

@@ -78,7 +78,11 @@ public class product_screen extends AppCompatActivity {
                 // set the product data
                 if (product != null) {
                     setProductData(product);
-                    loadProductImage();
+                    DB.getInstance().getImage(product).getDownloadUrl().addOnSuccessListener(uri -> {
+                        loadProductImage(uri.toString());
+                    }).addOnFailureListener(e -> {
+                        Log.e(TAG, "Error getting product image: " + e.getMessage());
+                    });
                 }
                 else {
                     Log.e(TAG, "Product data is null");
@@ -93,17 +97,23 @@ public class product_screen extends AppCompatActivity {
         });
     }
 
-    private void loadProductImage(){
-        try{
-            URL url = new URL("https://d1pxskmyx0hart.cloudfront.net/app/uploads/sites/3/2017/06/GoogleFu-e1497500211662.jpg");
-            Log.d(TAG, "Image URL: " + product.getImageUrl());
-            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            Log.d(TAG, "Image loaded");
-            ivProductImage.setImageBitmap(bmp);
-            Log.d(TAG, "Image set");
-        } catch (Exception e){
-            Log.e(TAG, "Error loading product image: " + e.getMessage());
-        }
+    private void loadProductImage(String imageUrl) {
+       new Thread(() -> {
+            try {
+                URL url = new URL(imageUrl);
+                Log.d(TAG, "Image URL: " + url);
+                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                Log.d(TAG, "Image loaded");
+                // Update the UI on the main thread
+                runOnUiThread(() -> {
+                    ivProductImage.setImageBitmap(bmp);
+                    Log.d(TAG, "Image set");
+                });
+            } catch (Exception e) {
+                Log.e(TAG, "Error loading product image: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void backToHome(View view) {

@@ -40,14 +40,6 @@ public class BarcodeScan extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.barcode_scan_screen);
-        if (!cameraPermissionGranted()) {
-            requestCameraPermission();
-        }
-        if (!cameraPermissionGranted()) {
-            Log.e(TAG, "Camera permission not granted");
-            setResult(RESULT_CANCELED);
-            finish();
-        }
         Log.d(TAG, "Camera permission granted");
         previewView = findViewById(R.id.previewView);
         resultIntent = new Intent();
@@ -55,14 +47,6 @@ public class BarcodeScan extends AppCompatActivity {
         startCamera();
     }
 
-    private boolean cameraPermissionGranted() {
-        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
-                == android.content.pm.PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestCameraPermission() {
-        requestPermissions(new String[]{android.Manifest.permission.CAMERA}, 0);
-    }
 
 
 
