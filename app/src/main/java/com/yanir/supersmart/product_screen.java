@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -52,6 +53,8 @@ public class product_screen extends AppCompatActivity {
         Log.d(TAG, "Views initialized");
         // get the product data
         getProductData(barcode);
+        // toste message - barcode
+        Toast.makeText(this, "Barcode: " + barcode, Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Product data retrieved");
     }
 
@@ -78,11 +81,21 @@ public class product_screen extends AppCompatActivity {
                 // set the product data
                 if (product != null) {
                     setProductData(product);
-                    DB.getInstance().getImage(product).getDownloadUrl().addOnSuccessListener(uri -> {
-                        loadProductImage(uri.toString());
-                    }).addOnFailureListener(e -> {
-                        Log.e(TAG, "Error getting product image: " + e.getMessage());
-                    });
+                    DB.getInstance().getStorage()
+                        .child("Products")
+                        .child(product.getBarcode())
+                        .child("approved")
+                        .listAll()
+                        .addOnSuccessListener(listResult -> {
+                            if (!listResult.getItems().isEmpty()) {
+                                listResult.getItems().get(0).getDownloadUrl()
+                                    .addOnSuccessListener(uri -> loadProductImage(uri.toString()))
+                                    .addOnFailureListener(e -> Log.e(TAG, "Error getting image URL: " + e.getMessage()));
+                            } else {
+                                Log.d(TAG, "No approved images found for product");
+                            }
+                        })
+                        .addOnFailureListener(e -> Log.e(TAG, "Error listing approved images: " + e.getMessage()));
                 }
                 else {
                     Log.e(TAG, "Product data is null");

@@ -10,6 +10,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.yanir.supersmart.EditItem;
+
 public class employee_management_screen extends AppCompatActivity {
 
     @Override
@@ -19,6 +21,12 @@ public class employee_management_screen extends AppCompatActivity {
         Button btnManageUsers = findViewById(R.id.btnManageUsers);
         btnManageUsers.setOnClickListener(v -> {
             Intent intent = new Intent(employee_management_screen.this, AdminApprovalActivity.class);
+            startActivity(intent);
+        });
+
+        Button btnAddItem = findViewById(R.id.btnAddNewItem);
+        btnAddItem.setOnClickListener(v -> {
+            Intent intent = new Intent(employee_management_screen.this, EditItem.class);
             startActivity(intent);
         });
     }

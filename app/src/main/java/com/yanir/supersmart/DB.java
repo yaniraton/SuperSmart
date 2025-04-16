@@ -28,11 +28,11 @@ public class DB {
     }
 
     public DatabaseReference getProduct(String barcode) {
-        return mDatabase.getReference("products").child(barcode);
+        return mDatabase.getReference("Products").child(barcode);
     }
     public void addProduct(Product product) {
         // refrance to the product in the database
-        mDatabase.getReference("products").child(product.getBarcode()).setValue(product);
+        mDatabase.getReference("Products").child(product.getBarcode()).setValue(product);
         Log.d(TAG, "Product added to database");
     }
 
@@ -40,10 +40,8 @@ public class DB {
         return mStorage.getReference().child("products").child(product.getBarcode() + ".JPG");
     }
 
-    // get image
-//    public DatabaseReference getImage(String barcode) {
-//
-//    }
-
+    public StorageReference getStorage() {
+        return mStorage.getReference();
+    }
 
 }
