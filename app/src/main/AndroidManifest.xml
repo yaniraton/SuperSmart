@@ -9,6 +9,8 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -19,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SuperSmart"
         tools:targetApi="31">
+        <activity
+            android:name=".SuggestImageActivity"
+            android:exported="false" />
         <activity
             android:name=".AdminApprovalActivity"
             android:exported="false" />
@@ -60,6 +65,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.yanir.supersmart.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 
 </manifest>
