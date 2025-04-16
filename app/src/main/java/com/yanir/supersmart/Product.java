@@ -5,14 +5,12 @@ public class Product {
     private String barcode;
     private String description;
     private float price;
-    private String imageUrl;
 
-    public Product(String name, String barcode, String description, float price, String imageUrl) {
+    public Product(String name, String barcode, String description, float price) {
         this.name = name;
         this.barcode = barcode;
         this.description = description;
         this.price = price;
-        this.imageUrl = imageUrl;
     }
 
     //default constructor
@@ -21,7 +19,6 @@ public class Product {
         this.barcode = "";
         this.description = "";
         this.price = 0;
-        this.imageUrl = "";
     }
 
     // getters
@@ -42,10 +39,6 @@ public class Product {
         return price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
     // setters
 
     public void setName(String name) {
@@ -64,9 +57,6 @@ public class Product {
         this.price = price;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
     @Override
     public String toString() {
@@ -75,7 +65,6 @@ public class Product {
                 ", barcode='" + barcode + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 

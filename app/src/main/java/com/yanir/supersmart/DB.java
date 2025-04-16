@@ -22,7 +22,7 @@ public class DB {
         return instance;
     }
 
-    public DB(){
+    private DB(){
         mDatabase = FirebaseDatabase.getInstance("https://supersmart-yanir-default-rtdb.europe-west1.firebasedatabase.app/");
         mStorage = FirebaseStorage.getInstance("gs://supersmart-yanir.firebasestorage.app");
     }
