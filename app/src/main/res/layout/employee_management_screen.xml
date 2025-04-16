@@ -41,6 +41,21 @@
         android:layout_height="0dp"
         android:layout_weight="2.5" />
 
+    <Button
+        android:id="@+id/btnManageUsers"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:backgroundTint="#C1BFFF"
+        android:drawableLeft="@drawable/user"
+        android:text="Manage Users"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5" />
+
     <!-- Import CSV Button -->
     <Button
         android:id="@+id/btnImportCSV"

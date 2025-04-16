@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -21,6 +20,9 @@
         android:theme="@style/Theme.SuperSmart"
         tools:targetApi="31">
         <activity
+            android:name=".AdminApprovalActivity"
+            android:exported="false" />
+        <activity
             android:name=".BarcodeScan"
             android:exported="false" />
         <activity
@@ -32,9 +34,11 @@
         <activity
             android:name=".EditItem"
             android:exported="false" />
+
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="barcode" />
+
         <activity
             android:name=".signup_screen"
             android:exported="false" />
