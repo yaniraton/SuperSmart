@@ -18,13 +18,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.load.engine.GlideException;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class product_screen extends AppCompatActivity {
 
@@ -33,10 +42,10 @@ public class product_screen extends AppCompatActivity {
     TextView tvProductName;
     TextView tvProductPrice;
     TextView tvProductDescription;
-    //Button btnEditProduct;
     Button btnBackToHome;
+    RecyclerView rvProductImages;
+    List<StorageReference> imageRefs = new ArrayList<>();
     Product product;
-
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -44,41 +53,35 @@ public class product_screen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.product_screen);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // locks the screen in the horizontol state.
-        // get the barcode from the intent
         String barcode = getIntent().getStringExtra("barcode");
-        // log the barcode
         Log.d(TAG, "Barcode: " + barcode);
-        // initialize the views
         initViews();
         Log.d(TAG, "Views initialized");
-        // get the product data
         getProductData(barcode);
-        // toste message - barcode
         Toast.makeText(this, "Barcode: " + barcode, Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Product data retrieved");
     }
 
     private void initViews() {
-        ivProductImage = findViewById(R.id.ivProductImage);
         tvProductName = findViewById(R.id.tvProductName);
         tvProductPrice = findViewById(R.id.tvProductPrice);
         tvProductDescription = findViewById(R.id.tvProductDescription);
         btnBackToHome = findViewById(R.id.btnBackToHome);
+        rvProductImages = findViewById(R.id.rvProductImages);
+        rvProductImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
     }
+
     private void setProductData(Product product) {
-        //ivProductImage.setImageResource(product.getImage());
         tvProductName.setText(product.getName());
         tvProductPrice.setText(product.getPrice() + "");
         tvProductDescription.setText(product.getDescription());
     }
+
     private void getProductData(String barcode) {
-        // get a database reference to the product
         DB.getInstance().getProduct(barcode).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // get the product data
                 product = snapshot.getValue(Product.class);
-                // set the product data
                 if (product != null) {
                     setProductData(product);
                     DB.getInstance().getStorage()
@@ -87,51 +90,24 @@ public class product_screen extends AppCompatActivity {
                         .child("approved")
                         .listAll()
                         .addOnSuccessListener(listResult -> {
-                            if (!listResult.getItems().isEmpty()) {
-                                listResult.getItems().get(0).getDownloadUrl()
-                                    .addOnSuccessListener(uri -> loadProductImage(uri.toString()))
-                                    .addOnFailureListener(e -> Log.e(TAG, "Error getting image URL: " + e.getMessage()));
-                            } else {
-                                Log.d(TAG, "No approved images found for product");
-                            }
+                            imageRefs.clear();
+                            imageRefs.addAll(listResult.getItems());
+                            rvProductImages.setAdapter(new ProductImageAdapter(imageRefs, product_screen.this));
+                            Log.d(TAG, "Loaded " + imageRefs.size() + " approved images.");
                         })
                         .addOnFailureListener(e -> Log.e(TAG, "Error listing approved images: " + e.getMessage()));
-                }
-                else {
+                } else {
                     Log.e(TAG, "Product data is null");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // log the error
                 Log.e(TAG, "Error getting product data: " + error.getMessage());
             }
         });
     }
-
-    private void loadProductImage(String imageUrl) {
-       new Thread(() -> {
-            try {
-                URL url = new URL(imageUrl);
-                Log.d(TAG, "Image URL: " + url);
-                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                Log.d(TAG, "Image loaded");
-                // Update the UI on the main thread
-                runOnUiThread(() -> {
-                    ivProductImage.setImageBitmap(bmp);
-                    Log.d(TAG, "Image set");
-                });
-            } catch (Exception e) {
-                Log.e(TAG, "Error loading product image: " + e.getMessage());
-                e.printStackTrace();
-            }
-        }).start();
-    }
-
     public void backToHome(View view) {
         finish();
     }
-
-
 }

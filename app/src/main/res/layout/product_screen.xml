@@ -7,14 +7,16 @@
     android:padding="16dp">
 
     <!-- Product Image Section -->
-    <ImageView
-        android:id="@+id/ivProductImage"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvProductImages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="4"
-        android:contentDescription="Product Image"
-        android:scaleType="centerInside"
-        android:src="@drawable/image" />
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp" />
 
     <!-- Spacer between Image and Details -->
     <View
