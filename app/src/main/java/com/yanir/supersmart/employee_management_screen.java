@@ -29,5 +29,11 @@ public class employee_management_screen extends AppCompatActivity {
             Intent intent = new Intent(employee_management_screen.this, EditItem.class);
             startActivity(intent);
         });
+
+        Button btnApproveSuggestedImages = findViewById(R.id.btnApproveSuggestedImages);
+        btnApproveSuggestedImages.setOnClickListener(v -> {
+            Intent intent = new Intent(employee_management_screen.this, AdminImageApprovalActivity.class);
+            startActivity(intent);
+        });
     }
 }

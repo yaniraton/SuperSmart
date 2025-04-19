@@ -9,8 +9,6 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
-
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -21,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SuperSmart"
         tools:targetApi="31">
+        <activity
+            android:name=".AdminImageApprovalActivity"
+            android:exported="false" />
         <activity
             android:name=".SuggestImageActivity"
             android:exported="false" />
@@ -75,7 +76,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

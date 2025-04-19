@@ -104,7 +104,24 @@
         android:textColor="@android:color/white"
         android:textSize="18sp" />
 
+    <!-- Approve Suggested Images Button -->
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5" />
+
     <!-- Spacer between buttons and footer -->
+    <Button
+        android:id="@+id/btnApproveSuggestedImages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:text=" Approve Suggested Images"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
