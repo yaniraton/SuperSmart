@@ -30,14 +30,9 @@ public class DB {
     public DatabaseReference getProduct(String barcode) {
         return mDatabase.getReference("Products").child(barcode);
     }
-    public void addProduct(Product product) {
-        // refrance to the product in the database
-        mDatabase.getReference("Products").child(product.getBarcode()).setValue(product);
-        Log.d(TAG, "Product added to database");
-    }
 
-    public StorageReference getImage(Product product) {
-        return mStorage.getReference().child("products").child(product.getBarcode() + ".JPG");
+    public DatabaseReference getDatabaseRef() {
+        return mDatabase.getReference();
     }
 
     public StorageReference getStorage() {

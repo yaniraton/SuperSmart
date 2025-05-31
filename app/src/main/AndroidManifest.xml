@@ -20,6 +20,9 @@
         android:theme="@style/Theme.SuperSmart"
         tools:targetApi="31">
         <activity
+            android:name=".ImportCSVActivity"
+            android:exported="false" />
+        <activity
             android:name=".AdminImageApprovalActivity"
             android:exported="false" />
         <activity
@@ -52,7 +55,7 @@
             android:name=".login_screen"
             android:exported="false" />
         <activity
-            android:name=".employee_management_screen"
+            android:name=".EmployeeManagementScreen"
             android:exported="false" />
         <activity
             android:name=".product_screen"

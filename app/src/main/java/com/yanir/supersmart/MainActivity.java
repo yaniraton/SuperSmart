@@ -4,28 +4,35 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.provider.Settings;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import android.graphics.drawable.Drawable;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import androidx.annotation.NonNull;
-import com.yanir.supersmart.AuthManager;
+import java.io.File;
+import java.io.IOException;
+import com.yanir.supersmart.GeminiManager;
+import com.yanir.supersmart.GeminiCallback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity_SuperSmart";
 
+    private Uri photoUri;
+    private ActivityResultLauncher<Uri> photoCaptureLauncher;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -42,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Activity started");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // locks the screen in the horizontol state.
         Button btnLogin = findViewById(R.id.btnLogin);
-        checkAdminStatus();
+
 
         btnLogin.setOnClickListener(v -> handleLoginButtonClick());
 
@@ -63,15 +72,98 @@ public class MainActivity extends AppCompatActivity {
                         Intent data = result.getData();
                         // Log the data
                         Log.i(TAG, "Data: " + data.getStringExtra("barcode"));
-                        Intent intent = new Intent(this, product_screen.class);
-                        intent.putExtra("barcode", data.getStringExtra("barcode"));
-                        startActivity(intent);
+                        String scannedBarcode = data.getStringExtra("barcode");
+
+                        DB.getInstance().getProduct(scannedBarcode).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    Intent intent = new Intent(MainActivity.this, product_screen.class);
+                                    intent.putExtra("barcode", scannedBarcode);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(MainActivity.this, "Product not found in database", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(MainActivity.this, "Failed to check product", Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, "Database error: ", error.toException());
+                            }
+                        });
                     }
                     if (result.getResultCode() == RESULT_CANCELED) {
                         ;
                     }
                 }
         );
+
+        Button btnIdentifyByPhoto = findViewById(R.id.btnIdentifyByPhoto);
+        btnIdentifyByPhoto.setOnClickListener(v -> {
+            if (!cameraPermissionGranted()) {
+                requestCameraPermission();
+            } else {
+                File photoFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "temp.jpg");
+                photoUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", photoFile);
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                photoCaptureLauncher.launch(photoUri);
+            }
+        });
+
+        photoCaptureLauncher = registerForActivityResult(
+                new ActivityResultContracts.TakePicture(),
+                result -> {
+                    if (result) {
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri);
+                            String prompt = "IYou are given a photo of a fruit or vegetable. You must identify it and return only its name, using one of the following known English names exactly: zucchini, eggplant, hot green pepper, dill, red pepper, yellow pepper, hot red pepper, melon, watermelon, onion, purple onion, kohlrabi, potato, dry garlic, pumpkin, packed potato, packed red potato, packed corn, kiwi, tomato, cherry tomato, cucumber, apple golden, apple hermon, apple granny smith, pear, white peach, red plum, red nectarine, orange, pomelo, lemon, banana, black grapes, apricot, red beet, lettuce, jerusalem artichoke, white cabbage, packed cilantro, celery, packed green onion, packed cherries, packed mushrooms, avocado, sweet potato, purple cabbage, white plum, green almonds, mango, clementine, fennel, persimmon, grapefruit, pomelit, baby leaves, yellow date, pomegranate, carrot, mint, cauliflower, parsley, loquat, guava, ginger, strawberries, pineapple, fresh figs, prickly pear, radish, broccoli, ripe avocado pack, white grapes, turnip, coconut, passionfruit.\n" +
+                                    "If the item does not match any of these exactly, return the phrase: `unknown_fruit`. Do not return anything else. Use only lowercase, no punctuation or extra words.";
+                            GeminiManager.getInstance().sendTextWithPhotoPrompt(prompt, bitmap, new GeminiCallback() {
+                                @Override
+                                public void onSuccess(String result) {
+                                    Log.d("Gemini", "onSuccess hit: " + result);
+                                    String identifiedName = result.trim().toLowerCase(); // "tomato"
+
+                                    DB.getInstance().getDatabaseRef().child("productMappings").child(identifiedName)
+                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if (snapshot.exists()) {
+                                                        String mappedBarcode = snapshot.getValue(String.class); // "31"
+                                                        Intent intent = new Intent(MainActivity.this, product_screen.class);
+                                                        intent.putExtra("barcode", mappedBarcode);
+                                                        startActivity(intent);
+                                                    } else {
+                                                        Toast.makeText(MainActivity.this, "Unknown product: " + identifiedName, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                    Toast.makeText(MainActivity.this, "Failed to lookup product", Toast.LENGTH_SHORT).show();
+                                                    Log.e("Gemini", "Firebase error: ", error.toException());
+                                                }
+                                            });
+                                }
+                                @Override
+                                public void onFailure(Throwable t) {
+                                    Log.e("Gemini", "Error: " + t.getMessage());
+                                }
+                            });
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+        );
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkAdminStatus();
     }
 
     //on click method
@@ -186,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
                     Boolean isAdmin = snapshot.getValue(Boolean.class);
                     if (Boolean.TRUE.equals(isAdmin)) {
                         // Admin – go to admin panel
-                        Intent intent = new Intent(MainActivity.this, employee_management_screen.class);
+                        Intent intent = new Intent(MainActivity.this, EmployeeManagementScreen.class);
                         startActivity(intent);
                     } else {
                         // Logged in but not admin – do nothing

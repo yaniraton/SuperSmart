@@ -4,15 +4,9 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.widget.Button;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.yanir.supersmart.EditItem;
-
-public class employee_management_screen extends AppCompatActivity {
+public class EmployeeManagementScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,19 +14,25 @@ public class employee_management_screen extends AppCompatActivity {
         setContentView(R.layout.employee_management_screen);
         Button btnManageUsers = findViewById(R.id.btnManageUsers);
         btnManageUsers.setOnClickListener(v -> {
-            Intent intent = new Intent(employee_management_screen.this, AdminApprovalActivity.class);
+            Intent intent = new Intent(EmployeeManagementScreen.this, AdminApprovalActivity.class);
             startActivity(intent);
         });
 
         Button btnAddItem = findViewById(R.id.btnAddNewItem);
         btnAddItem.setOnClickListener(v -> {
-            Intent intent = new Intent(employee_management_screen.this, EditItem.class);
+            Intent intent = new Intent(EmployeeManagementScreen.this, EditItem.class);
             startActivity(intent);
         });
 
         Button btnApproveSuggestedImages = findViewById(R.id.btnApproveSuggestedImages);
         btnApproveSuggestedImages.setOnClickListener(v -> {
-            Intent intent = new Intent(employee_management_screen.this, AdminImageApprovalActivity.class);
+            Intent intent = new Intent(EmployeeManagementScreen.this, AdminImageApprovalActivity.class);
+            startActivity(intent);
+        });
+
+        Button btnImportCSV = findViewById(R.id.btnImportCSV);
+        btnImportCSV.setOnClickListener(v -> {
+            Intent intent = new Intent(EmployeeManagementScreen.this, ImportCSVActivity.class);
             startActivity(intent);
         });
     }
