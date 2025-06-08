@@ -41,9 +41,6 @@
             android:name=".FilterAndEdit"
             android:exported="false" />
         <activity
-            android:name=".ImportProducts"
-            android:exported="false" />
-        <activity
             android:name=".EditItem"
             android:exported="false" />
 

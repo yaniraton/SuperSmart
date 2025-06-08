@@ -19,13 +19,27 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
+/**
+ * Activity for adding or editing a product in the database.
+ * If launched with a barcode, the activity loads existing product details for editing.
+ * Otherwise, it allows adding a new product with a scanned barcode.
+ */
 public class EditItem extends AppCompatActivity {
 
+    /**
+     * Request code for starting the barcode scanning activity.
+     */
     private static final int BARCODE_SCAN_REQUEST = 1001;
     private EditText etProductName, etPrice, etDescription, etBarcode;
     private Button btnSaveItem, btnScanBarcode;
 
     @Override
+    /**
+     * Initializes the activity, sets up UI components, and handles both edit and add modes
+     * based on the presence of a barcode passed via Intent.
+     * Connects to Firebase Realtime Database to load and save product information.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_item_screen);
@@ -54,7 +68,7 @@ public class EditItem extends AppCompatActivity {
         }
 
         if (barcode != null) {
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Products").child(barcode);
+            DatabaseReference ref = DB.getInstance().getProduct(barcode);
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
@@ -75,6 +89,7 @@ public class EditItem extends AppCompatActivity {
             });
         }
 
+        // Save or update the product in Firebase when the user clicks the save button.
         btnSaveItem.setOnClickListener(v -> {
             String name = etProductName.getText().toString().trim();
             String description = etDescription.getText().toString().trim();
@@ -89,8 +104,7 @@ public class EditItem extends AppCompatActivity {
 
             Product product = new Product(name, code, description, price);
 
-            FirebaseDatabase.getInstance().getReference("Products")
-                .child(code)
+            DB.getInstance().getProduct(code)
                 .setValue(product)
                 .addOnSuccessListener(unused -> Toast.makeText(EditItem.this, "Product saved!", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(EditItem.this, "Save failed", Toast.LENGTH_SHORT).show());
@@ -98,6 +112,14 @@ public class EditItem extends AppCompatActivity {
     }
 
     @Override
+    /**
+     * Handles the result from the barcode scanning activity.
+     * Updates the barcode EditText with the scanned value.
+     *
+     * @param requestCode The integer request code originally supplied to startActivityForResult().
+     * @param resultCode The integer result code returned by the child activity.
+     * @param data An Intent, which can return result data to the caller.
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == BARCODE_SCAN_REQUEST && resultCode == RESULT_OK && data != null) {

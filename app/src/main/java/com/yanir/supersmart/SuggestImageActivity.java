@@ -35,6 +35,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+/**
+ * Activity that allows users to suggest an image for a product by either capturing a photo using the camera
+ * or selecting one from the gallery. The selected image is uploaded to Firebase Storage under a unique
+ * filename and awaits admin approval.
+ */
 public class SuggestImageActivity extends AppCompatActivity {
 
     private static final String TAG = "SuggestImageActivity";
@@ -45,6 +50,10 @@ public class SuggestImageActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     private ActivityResultLauncher<Intent> cameraLauncher;
 
+    /**
+     * Initializes the activity, sets up UI event listeners, and configures activity result launchers
+     * for image picking and camera capture.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,12 +98,18 @@ public class SuggestImageActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * Launches an intent to allow the user to pick an image from the gallery.
+     */
     private void openImagePicker() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         imagePickerLauncher.launch(intent);
     }
 
+    /**
+     * Launches the device camera to capture a new photo and stores it temporarily in external storage.
+     */
     private void openCamera() {
         Log.d(TAG, "openCamera() called");
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -123,6 +138,12 @@ public class SuggestImageActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates a temporary file in the external pictures directory to store a captured image.
+     *
+     * @return File object pointing to the newly created image file
+     * @throws IOException if the file could not be created
+     */
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -130,6 +151,9 @@ public class SuggestImageActivity extends AppCompatActivity {
         return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
 
+    /**
+     * Displays a bottom sheet dialog offering the user a choice between capturing a photo or picking one from the gallery.
+     */
     private void showImageChoiceSheet() {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View sheetView = getLayoutInflater().inflate(R.layout.dialog_image_choice, null);
@@ -148,6 +172,11 @@ public class SuggestImageActivity extends AppCompatActivity {
         bottomSheetDialog.show();
     }
 
+    /**
+     * Uploads the selected image to Firebase Storage under a suggestions path related to the given product barcode.
+     * Generates a unique filename using user ID, timestamp, and a short random string.
+     * Shows success/failure messages via Toast.
+     */
     private void uploadSelectedImage() {
         String barcode = getIntent().getStringExtra("barcode");
         if (selectedImageUri == null || barcode == null) {

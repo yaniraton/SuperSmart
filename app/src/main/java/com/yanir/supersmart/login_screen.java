@@ -21,8 +21,19 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.yanir.supersmart.AuthManager;
 
+/**
+ * Activity responsible for handling user login in the SuperSmart app.
+ * It authenticates the user via Firebase Authentication using email and password,
+ * and redirects to the main screen upon successful login.
+ * Also provides a link to navigate to the sign-up screen.
+ */
 public class login_screen extends AppCompatActivity {
 
+    /**
+     * Called when the activity is starting. Initializes UI components and sets up login logic.
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this Bundle contains the data it most recently supplied.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +55,15 @@ public class login_screen extends AppCompatActivity {
                 return;
             }
 
+            // Attempt to log in the user using the provided credentials
             authManager.login(email, password, task -> {
                 if (task.isSuccessful()) {
+                    // Upon successful login, check if the user is an admin
                     String uid = authManager.getCurrentUser().getUid();
                     authManager.isAdmin(uid, new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            // Redirect to the main activity after login
                             Intent intent = new Intent(login_screen.this, MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -67,6 +81,7 @@ public class login_screen extends AppCompatActivity {
             });
         });
 
+        // Navigate to sign-up screen if user clicks the footer text
         tvSignUpFooter.setOnClickListener(v -> {
             startActivity(new Intent(this, signup_screen.class));
             finish();

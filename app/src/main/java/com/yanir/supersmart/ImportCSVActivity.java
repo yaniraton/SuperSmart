@@ -26,16 +26,41 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * ImportCSVActivity allows the admin to upload a CSV file of products,
+ * preview a portion of the file, and upload valid entries to Firebase Realtime Database.
+ *
+ * The CSV file should be in the format: barcode,name,price
+ * - The app displays a preview of up to 200 valid products.
+ * - Upon confirmation, the entire file is parsed again and uploaded to Firebase in batches.
+ *
+ * This activity is useful for bulk-adding products to the system.
+ */
 public class ImportCSVActivity extends AppCompatActivity {
 
+    // Launches the system file picker to choose a CSV file
     private ActivityResultLauncher<Intent> filePickerLauncher;
+
+    // Stores the selected file URI for reading
     private Uri fileUri;
+
+    // Displays the preview list of parsed products
     private RecyclerView recyclerView;
+
+    // Button to trigger CSV file selection
     private Button btnUploadCsv;
+
+    // Stats used for UI display
     private int totalLines = 0;
     private int validLines = 0;
+
+    // Temporarily holds products parsed from CSV for previewing
     private List<Product> previewList = new ArrayList<>();
 
+    /**
+     * Initializes the activity, sets up UI elements and file picker launcher.
+     * Handles CSV file selection, parsing for preview, and UI updates.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +69,12 @@ public class ImportCSVActivity extends AppCompatActivity {
         btnUploadCsv = findViewById(R.id.btnUploadCsv);
         recyclerView = findViewById(R.id.rvParsedProducts);
 
+        // Initialize file picker to handle result
         filePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        fileUri = result.getData().getData(); // Save for future upload
+                        fileUri = result.getData().getData(); // Save selected file URI
 
                         try (InputStream inputStream = getContentResolver().openInputStream(fileUri);
                              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -57,6 +83,7 @@ public class ImportCSVActivity extends AppCompatActivity {
                             int previewLimit = 200;
                             previewList = new ArrayList<>();
 
+                            // Read lines from file to build preview list (up to 200 valid entries)
                             while ((line = reader.readLine()) != null && previewList.size() < previewLimit) {
                                 totalLines++;
                                 String[] columns = line.split(",");
@@ -69,13 +96,14 @@ public class ImportCSVActivity extends AppCompatActivity {
                                         float price = Float.parseFloat(priceStr);
                                         validLines++;
                                         Product product = new Product(name, barcode, "", price);
-                                        previewList.add(product);
+                                        previewList.add(product); // Add valid product to preview
                                     } catch (NumberFormatException ignored) {
+                                        // Skip invalid price
                                     }
                                 }
                             }
 
-                            // Continue counting valid lines without storing products
+                            // Continue counting valid entries (for stats) after preview limit
                             while ((line = reader.readLine()) != null) {
                                 totalLines++;
                                 String[] columns = line.split(",");
@@ -84,15 +112,15 @@ public class ImportCSVActivity extends AppCompatActivity {
                                     try {
                                         Float.parseFloat(priceStr);
                                         validLines++;
-                                    } catch (NumberFormatException ignored) {}
+                                    } catch (NumberFormatException ignored) {
+                                    }
                                 }
                             }
 
-                            // Update UI with preview list and stats
+                            // Update UI with preview and statistics
                             findViewById(R.id.loadedCsvContainer).setVisibility(View.VISIBLE);
                             findViewById(R.id.btnUploadCsv).setVisibility(View.GONE);
 
-                            recyclerView = findViewById(R.id.rvParsedProducts);
                             recyclerView.setLayoutManager(new LinearLayoutManager(this));
                             recyclerView.setAdapter(new ParsedProductAdapter(previewList));
 
@@ -110,19 +138,24 @@ public class ImportCSVActivity extends AppCompatActivity {
                     }
                 });
 
+        // When clicking upload, open the file picker
         btnUploadCsv.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("text/*"); // "text/csv" may not be accepted by all devices
+            intent.setType("text/*"); // Some devices may not support "text/csv"
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             filePickerLauncher.launch(Intent.createChooser(intent, "Select CSV File"));
         });
 
+        // Upload confirmed preview to database
         Button btnUploadToDb = findViewById(R.id.btnUploadToDb);
         btnUploadToDb.setOnClickListener(v -> uploadProducts());
     }
 
+    /**
+     * Reads the CSV file again and uploads all valid entries to Firebase Realtime Database.
+     * Batches updates in groups of 200 to reduce write load.
+     */
     private void uploadProducts() {
-        // This method should be called when the user confirms the upload
         new AlertDialog.Builder(this)
             .setTitle("Confirm Upload")
             .setMessage("Are you sure you want to upload the products?")
@@ -138,6 +171,7 @@ public class ImportCSVActivity extends AppCompatActivity {
                     DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
                     Map<String, Object> batchMap = new HashMap<>();
 
+                    // Re-parse the file and collect valid entries
                     while ((line = reader.readLine()) != null) {
                         String[] columns = line.split(",");
                         if (columns.length >= 3) {
@@ -154,6 +188,7 @@ public class ImportCSVActivity extends AppCompatActivity {
                                 failCount++;
                             }
 
+                            // Upload in batches
                             if (batchMap.size() >= batchSize) {
                                 dbRef.updateChildren(batchMap);
                                 batchMap.clear();
@@ -161,6 +196,7 @@ public class ImportCSVActivity extends AppCompatActivity {
                         }
                     }
 
+                    // Final batch push
                     if (!batchMap.isEmpty()) {
                         dbRef.updateChildren(batchMap);
                     }

@@ -24,6 +24,11 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Displays detailed information about a specific product based on its barcode.
+ * Retrieves product data from Firebase Realtime Database and loads product images from Firebase Storage.
+ * Also provides admin functionality for editing the product and suggesting new product images.
+ */
 public class product_screen extends AppCompatActivity {
 
     final String TAG = "ProductScreen";
@@ -36,6 +41,12 @@ public class product_screen extends AppCompatActivity {
     List<StorageReference> imageRefs = new ArrayList<>();
     Product product;
 
+    /**
+     * Called when the activity is created.
+     * Initializes views, locks screen orientation, and loads product data based on the barcode passed via intent.
+     *
+     * @param savedInstanceState Bundle containing the activity's previously saved state.
+     */
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +62,10 @@ public class product_screen extends AppCompatActivity {
         Log.d(TAG, "Product data retrieved");
     }
 
+    /**
+     * Initializes UI components and sets up admin functionality.
+     * Displays edit button if the user is an admin and sets click listeners for editing and suggesting images.
+     */
     private void initViews() {
         tvProductName = findViewById(R.id.tvProductName);
         tvProductPrice = findViewById(R.id.tvProductPrice);
@@ -89,12 +104,23 @@ public class product_screen extends AppCompatActivity {
         });
     }
 
+    /**
+     * Binds product data to the UI components.
+     *
+     * @param product The product whose details will be displayed.
+     */
     private void setProductData(Product product) {
         tvProductName.setText(product.getName());
         tvProductPrice.setText(product.getPrice() + "");
         tvProductDescription.setText(product.getDescription());
     }
 
+    /**
+     * Retrieves product data from Firebase Realtime Database and approved images from Firebase Storage.
+     * Sets the product data in the UI and initializes the RecyclerView with approved images.
+     *
+     * @param barcode The barcode of the product to retrieve.
+     */
     private void getProductData(String barcode) {
         DB.getInstance().getProduct(barcode).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

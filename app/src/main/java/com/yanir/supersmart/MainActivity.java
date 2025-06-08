@@ -34,6 +34,12 @@ import java.io.IOException;
 import com.yanir.supersmart.GeminiManager;
 import com.yanir.supersmart.GeminiCallback;
 
+/**
+ * MainActivity serves as the primary entry point of the application.
+ * It supports barcode scanning and image-based identification of fruits and vegetables
+ * using Google's Gemini API. It also provides login/logout functionality,
+ * including admin role-based access to management features.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> activityResultLauncher;
@@ -43,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
     private Uri photoUri;
     private ActivityResultLauncher<Uri> photoCaptureLauncher;
 
+    /**
+     * Called when the activity is starting. Initializes the UI, sets up button click handlers,
+     * registers for activity results, and configures Gemini-based image recognition and camera handling.
+     * @param savedInstanceState The saved instance state from previous activity states.
+     */
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener(v -> handleLoginButtonClick());
 
+        // Long press on login button logs the user out if currently logged in
         btnLogin.setOnLongClickListener(v -> {
             AuthManager authManager = AuthManager.getInstance();
             if (authManager.getCurrentUser() != null) {
@@ -115,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         photoCaptureLauncher = registerForActivityResult(
                 new ActivityResultContracts.TakePicture(),
                 result -> {
+                    // After image is captured, use Gemini to identify produce and redirect to product screen
                     if (result) {
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri);
@@ -166,7 +179,11 @@ public class MainActivity extends AppCompatActivity {
         checkAdminStatus();
     }
 
-    //on click method
+    /**
+     * Launches the barcode scanning activity if camera permission is granted.
+     * If not, requests permission.
+     * @param view The button view that triggered the event.
+     */
     public void openBarcodeScanner(View view) {
         if (!cameraPermissionGranted()) {
             requestCameraPermission();
@@ -176,11 +193,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks if camera permission has been granted.
+     * @return true if permission is granted; false otherwise.
+     */
     private boolean cameraPermissionGranted() {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
                 == android.content.pm.PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+     * Requests camera permission from the user with an explanatory dialog if needed.
+     */
     private void requestCameraPermission() {
         if (shouldShowRequestPermissionRationale(android.Manifest.permission.CAMERA)) {
             new androidx.appcompat.app.AlertDialog.Builder(this)
@@ -197,6 +221,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Callback for the result from requesting permissions.
+     * If granted, it retries the barcode scanning; otherwise shows rationale or redirect to settings.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -225,6 +253,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks if the currently logged-in user is an admin.
+     * Updates the login button accordingly.
+     */
     private void checkAdminStatus() {
         AuthManager authManager = AuthManager.getInstance();
         Button btnLogin = findViewById(R.id.btnLogin);
@@ -254,17 +286,31 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Updates UI when an admin user is detected.
+     * @param btnLogin The login button to update.
+     */
     private void onAdminDetected(Button btnLogin) {
         updateLoginButton(btnLogin, "Manage Products", R.drawable.worker);
         Log.d(TAG, "Admin user detected.");
     }
 
+    /**
+     * Updates the login button’s text and icon.
+     * @param button The button to update.
+     * @param text The new text to display.
+     * @param drawableResId The drawable resource for the button icon.
+     */
     private void updateLoginButton(Button button, String text, int drawableResId) {
         Drawable icon = ResourcesCompat.getDrawable(getResources(), drawableResId, null);
         button.setText(text);
         button.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
     }
 
+    /**
+     * Handles login button clicks.
+     * Navigates to login screen or admin panel based on the user's authentication and role.
+     */
     private void handleLoginButtonClick() {
         AuthManager authManager = AuthManager.getInstance();
         if (authManager.getCurrentUser() == null) {

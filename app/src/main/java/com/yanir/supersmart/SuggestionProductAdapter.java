@@ -9,19 +9,41 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+/**
+ * RecyclerView Adapter to display a list of product suggestions based on barcodes.
+ * Allows users to click on an item to trigger a callback.
+ */
 public class SuggestionProductAdapter extends RecyclerView.Adapter<SuggestionProductAdapter.SuggestionViewHolder> {
 
+    /**
+     * Interface for handling barcode click events.
+     */
     public interface OnBarcodeClickListener {
+        /**
+         * Called when a barcode item is clicked.
+         *
+         * @param barcode The clicked barcode string.
+         */
         void onBarcodeClick(String barcode);
     }
 
     private List<String> barcodeList;
     private OnBarcodeClickListener listener;
 
+    /**
+     * Constructs the adapter with a list of barcode strings.
+     *
+     * @param barcodeList List of barcode strings to display.
+     */
     public SuggestionProductAdapter(List<String> barcodeList) {
         this.barcodeList = barcodeList;
     }
 
+    /**
+     * Sets the barcode click listener.
+     *
+     * @param listener The listener to handle barcode click events.
+     */
     public void setOnBarcodeClickListener(OnBarcodeClickListener listener) {
         this.listener = listener;
     }
@@ -51,6 +73,9 @@ public class SuggestionProductAdapter extends RecyclerView.Adapter<SuggestionPro
         return barcodeList.size();
     }
 
+    /**
+     * ViewHolder class for barcode suggestion items.
+     */
     static class SuggestionViewHolder extends RecyclerView.ViewHolder {
         TextView tvBarcode, tvImageCount;
 

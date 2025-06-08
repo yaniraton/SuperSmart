@@ -16,6 +16,14 @@ import com.google.firebase.functions.FirebaseFunctions;
 
 import java.util.Collections;
 
+/**
+ * signup_screen is the user registration screen for the SuperSmart app.
+ * <p>
+ * This Activity allows new users to create an account by entering their email, password,
+ * and display name. It handles user input, validates the registration data, interacts with
+ * the AuthManager for Firebase Authentication, and sets up the display name via a Firebase Function.
+ * </p>
+ */
 public class signup_screen extends AppCompatActivity {
 
     private EditText etEmail, etPassword, etConfirmPassword, etDisplayName;
@@ -26,6 +34,16 @@ public class signup_screen extends AppCompatActivity {
 
 
     @Override
+    /**
+     * Called when the activity is starting.
+     * <p>
+     * This method sets up the user interface for the signup screen, initializes UI elements,
+     * configures user interaction handlers, and manages the registration workflow including
+     * input validation and communication with the AuthManager for Firebase Authentication.
+     * </p>
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Otherwise it is null.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_screen);
@@ -76,6 +94,16 @@ public class signup_screen extends AppCompatActivity {
         });
     }
 
+    /**
+     * Calls a Firebase Function to set the user's display name after successful signup.
+     * <p>
+     * This method invokes the 'setDisplayName' HTTPS Callable Firebase Function directly,
+     * passing the provided display name as a parameter. There is no FunctionsManager,
+     * so direct access to Firebase Functions is acceptable here.
+     * </p>
+     *
+     * @param displayName The display name to set for the newly registered user.
+     */
     private void setDisplayName(String displayName) {
         functions
                 .getHttpsCallable("setDisplayName")

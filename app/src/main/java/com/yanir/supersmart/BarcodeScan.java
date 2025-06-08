@@ -29,12 +29,22 @@ import com.google.mlkit.vision.common.InputImage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Activity that uses the device camera to scan barcodes using ML Kit.
+ * On a successful scan, the barcode value is returned as an intent result.
+ */
 public class BarcodeScan extends AppCompatActivity {
     private PreviewView previewView;
     private Intent resultIntent;
     private ExecutorService cameraExecutor;
     private static final String TAG = "BarcodeScanner";
 
+    /**
+     * Initializes the activity and sets up the camera preview and executor.
+     * Starts the camera when the activity is created.
+     *
+     * @param savedInstanceState Previously saved state, if any.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,9 +57,10 @@ public class BarcodeScan extends AppCompatActivity {
         startCamera();
     }
 
-
-
-
+    /**
+     * Configures and starts the camera using CameraX.
+     * Sets up a preview and image analysis pipeline for real-time barcode scanning.
+     */
     private void startCamera() {
         Log.d(TAG, "Initializing Camera...");
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture =
@@ -102,6 +113,12 @@ public class BarcodeScan extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
     }
 
+    /**
+     * Analyzes an image frame to detect barcodes using ML Kit.
+     * Sends the result back to the calling activity upon detection.
+     *
+     * @param imageProxy The image frame captured from the camera.
+     */
     private void analyzeImage(@NonNull ImageProxy imageProxy) {
         try {
             @SuppressWarnings("UnsafeOptInUsageError")
@@ -133,6 +150,9 @@ public class BarcodeScan extends AppCompatActivity {
         }
     }
 
+    /**
+     * Releases camera resources when the activity is destroyed.
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

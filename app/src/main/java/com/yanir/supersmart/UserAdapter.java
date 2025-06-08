@@ -16,21 +16,45 @@ import com.yanir.supersmart.User;
 
 import java.util.List;
 
+
+/**
+ * Adapter for displaying a list of users in a RecyclerView.
+ * This adapter is used in the admin panel to allow administrators to view users
+ * and toggle their admin permission status (approve or revoke).
+ */
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     private List<User> userList;
     private Context context;
 
+    /**
+     * Constructs a new UserAdapter.
+     *
+     * @param context the context in which the adapter is used
+     * @param userList the list of users to display
+     */
     public UserAdapter(Context context, List<User> userList) {
         this.userList = userList;
         this.context = context;
     }
 
+    /**
+     * Updates the list of users and refreshes the RecyclerView.
+     *
+     * @param users the new list of users
+     */
     public void setUsers(List<User> users) {
         this.userList = users;
         notifyDataSetChanged();
     }
 
+    /**
+     * Creates a new UserViewHolder for a user item.
+     *
+     * @param parent the parent ViewGroup
+     * @param viewType the view type of the new View
+     * @return a new UserViewHolder
+     */
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -38,6 +62,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         return new UserViewHolder(view);
     }
 
+    /**
+     * Binds the user data to the ViewHolder.
+     * Also handles the approval/revocation of admin permission for users.
+     *
+     * @param holder the ViewHolder to bind data to
+     * @param position the position of the item in the list
+     */
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         User user = userList.get(position);
@@ -57,11 +88,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         });
     }
 
+    /**
+     * Returns the number of users in the list.
+     *
+     * @return the number of users
+     */
     @Override
     public int getItemCount() {
         return userList != null ? userList.size() : 0;
     }
 
+    /**
+     * ViewHolder class for user items.
+     * Holds references to the UI elements in each item.
+     */
     static class UserViewHolder extends RecyclerView.ViewHolder {
         TextView tvDisplayName, tvEmail;
         Button btnApproveRevoke;

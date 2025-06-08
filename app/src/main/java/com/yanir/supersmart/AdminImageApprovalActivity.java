@@ -23,6 +23,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+/**
+ * Activity for administrators to review and manage user-submitted image suggestions.
+ * Displays a list of product barcodes with suggestions, and allows admins to approve or deny each image.
+ * Approved images are processed through a Firebase Function and denied images are deleted from storage.
+ */
 public class AdminImageApprovalActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewSuggestions;
@@ -48,6 +53,10 @@ public class AdminImageApprovalActivity extends AppCompatActivity {
         loadSuggestedBarcodes();
     }
 
+    /**
+     * Loads barcodes of products for which users have suggested images using a Firebase Function.
+     * Populates the RecyclerView with the list of barcodes.
+     */
     private void loadSuggestedBarcodes() {
         functions
             .getHttpsCallable("getProductsWithSuggestions")
@@ -63,6 +72,11 @@ public class AdminImageApprovalActivity extends AppCompatActivity {
             });
     }
 
+    /**
+     * Loads suggested images for a specific product barcode from Firebase Storage.
+     * Initializes an adapter that allows the admin to approve or deny each image.
+     * @param barcode the product barcode to load suggestions for
+     */
     private void loadSuggestedImagesForBarcode(String barcode) {
         Toast.makeText(this, "Loading images for barcode: " + barcode, Toast.LENGTH_SHORT).show();
 
@@ -86,7 +100,8 @@ public class AdminImageApprovalActivity extends AppCompatActivity {
                             .call(Map.of("barcode", barcode, "filename", filename))
                             .addOnSuccessListener(task -> {
                                 Toast.makeText(AdminImageApprovalActivity.this, "Image approved", Toast.LENGTH_SHORT).show();
-                                loadSuggestedImagesForBarcode(barcode); // refresh list
+                                // Refresh the image list after approval
+                                loadSuggestedImagesForBarcode(barcode);
                             })
                             .addOnFailureListener(e -> {
                                 Log.e("ImageApproval", "Approval failed", e);
@@ -99,7 +114,8 @@ public class AdminImageApprovalActivity extends AppCompatActivity {
                         ref.delete()
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(AdminImageApprovalActivity.this, "Image denied (deleted)", Toast.LENGTH_SHORT).show();
-                                loadSuggestedImagesForBarcode(barcode); // refresh list
+                                // Refresh the image list after denial
+                                loadSuggestedImagesForBarcode(barcode);
                             })
                             .addOnFailureListener(e -> {
                                 Log.e("ImageApproval", "Deletion failed", e);

@@ -6,8 +6,19 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * The EmployeeManagementScreen is the central admin interface for managing application resources.
+ * It provides navigation to various administrative tasks such as managing users, adding items,
+ * approving images, importing CSV data, and editing produce mappings.
+ */
 public class EmployeeManagementScreen extends AppCompatActivity {
 
+    /**
+     * Initializes the activity and sets up button click listeners that navigate to various
+     * administrative functions within the application.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
