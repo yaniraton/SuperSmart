@@ -39,4 +39,8 @@ public class DB {
         return mStorage.getReference();
     }
 
+    public DatabaseReference getFruitMappingRef() {
+        return mDatabase.getReference("productMappings");
+    }
+
 }

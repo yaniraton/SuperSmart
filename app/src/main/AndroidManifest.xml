@@ -20,6 +20,9 @@
         android:theme="@style/Theme.SuperSmart"
         tools:targetApi="31">
         <activity
+            android:name=".AdminProduceMappingActivity"
+            android:exported="false" />
+        <activity
             android:name=".ImportCSVActivity"
             android:exported="false" />
         <activity

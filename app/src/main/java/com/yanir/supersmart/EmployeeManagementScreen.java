@@ -35,5 +35,11 @@ public class EmployeeManagementScreen extends AppCompatActivity {
             Intent intent = new Intent(EmployeeManagementScreen.this, ImportCSVActivity.class);
             startActivity(intent);
         });
+
+        Button btnEditProduceMappings = findViewById(R.id.btnEditProduceMappings);
+        btnEditProduceMappings.setOnClickListener(v -> {
+            Intent intent = new Intent(EmployeeManagementScreen.this, AdminProduceMappingActivity.class);
+            startActivity(intent);
+        });
     }
 }

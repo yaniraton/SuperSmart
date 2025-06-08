@@ -39,7 +39,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2.5" />
+        android:layout_weight="0.5" />
 
     <Button
         android:id="@+id/btnManageUsers"
@@ -94,11 +94,27 @@
 
     <!-- Add New Item Button -->
     <Button
-        android:id="@+id/btnAddNewItem"
+        android:id="@+id/btnEditProduceMappings"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
         android:backgroundTint="@android:color/holo_orange_light"
+        android:drawableLeft="@drawable/avocado"
+        android:text=" Edit Produce Mappings"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"/>
+
+    <Button
+        android:id="@+id/btnAddNewItem"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:backgroundTint="@android:color/holo_orange_dark"
         android:drawableLeft="@drawable/add"
         android:text=" Add New Item"
         android:textColor="@android:color/white"

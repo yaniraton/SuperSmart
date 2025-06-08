@@ -21,7 +21,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField "String", "Gemini_API_Key", "\"" + (project.properties['Gemini_API_Key'] ?: "AIzaSyCX19pWvv2geVs1kaakxAKU8dVQiIFhEuQ") + "\""
+        buildConfigField "String", "Gemini_API_Key", "\"" + (project.properties['Gemini_API_Key'] ?: "") + "\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
