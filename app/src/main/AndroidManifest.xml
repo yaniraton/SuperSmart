@@ -41,7 +41,7 @@
             android:name=".FilterAndEdit"
             android:exported="false" />
         <activity
-            android:name=".EditItem"
+            android:name=".EditItemActivity"
             android:exported="false" />
 
         <meta-data
@@ -49,16 +49,16 @@
             android:value="barcode" />
 
         <activity
-            android:name=".signup_screen"
+            android:name=".SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".login_screen"
+            android:name=".LoginActivity"
             android:exported="false" />
         <activity
             android:name=".EmployeeManagementScreen"
             android:exported="false" />
         <activity
-            android:name=".product_screen"
+            android:name=".ProductViewActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

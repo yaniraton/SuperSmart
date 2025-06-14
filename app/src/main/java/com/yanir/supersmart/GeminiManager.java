@@ -6,7 +6,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.ai.client.generativeai.GenerativeModel;
-import com.google.ai.client.generativeai.type.BlobPart;
 import com.google.ai.client.generativeai.type.Content;
 import com.google.ai.client.generativeai.type.GenerateContentResponse;
 import com.google.ai.client.generativeai.type.ImagePart;

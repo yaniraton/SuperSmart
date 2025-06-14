@@ -1,8 +1,6 @@
 package com.yanir.supersmart;
 
 
-import android.util.Log;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -80,4 +78,12 @@ public class DB {
         return mDatabase.getReference("Users").child(uid);
     }
 
+    /**
+     * Deletes a product node identified by its barcode from the Firebase Realtime Database.
+     * @param barcode The barcode of the product to delete
+     * @param listener Callback to handle completion of the deletion operation
+     */
+    public void deleteProduct(String barcode, com.google.android.gms.tasks.OnCompleteListener<Void> listener) {
+        getProduct(barcode).removeValue().addOnCompleteListener(listener);
+    }
 }

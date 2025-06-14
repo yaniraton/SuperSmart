@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,7 +60,7 @@ public class SuggestionProductAdapter extends RecyclerView.Adapter<SuggestionPro
     public void onBindViewHolder(@NonNull SuggestionViewHolder holder, int position) {
         String barcode = barcodeList.get(position);
         holder.tvBarcode.setText("Barcode: " + barcode);
-        holder.tvImageCount.setText("Images: (loading...)"); // Placeholder
+        holder.tvImageCount.setText(""); // Placeholder
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {

@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -168,7 +167,7 @@ public class ImportCSVActivity extends AppCompatActivity {
                     int failCount = 0;
                     int batchSize = 200;
 
-                    DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+                    DatabaseReference dbRef = DB.getInstance().getDatabaseRef();
                     Map<String, Object> batchMap = new HashMap<>();
 
                     // Re-parse the file and collect valid entries

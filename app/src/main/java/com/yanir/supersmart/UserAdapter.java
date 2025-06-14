@@ -6,13 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.yanir.supersmart.R;
-import com.yanir.supersmart.User;
 
 import java.util.List;
 
@@ -80,9 +78,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.btnApproveRevoke.setText(isAdmin ? "Revoke" : "Approve");
 
         holder.btnApproveRevoke.setOnClickListener(v -> {
-            DatabaseReference ref = FirebaseDatabase.getInstance()
-                    .getReference("Users")
-                    .child(user.getUid());
+            DatabaseReference ref = DB.getInstance().getUserRef(user.getUid());
 
             ref.child("permission").setValue(!isAdmin);
         });

@@ -17,12 +17,12 @@ import java.util.List;
  * Adapter class for displaying product images using Firebase Storage references in a RecyclerView.
  * Each image is represented by a {@link StorageReference} and displayed using Glide.
  *
- * This adapter is used in the {@link product_screen} activity to present product thumbnails.
+ * This adapter is used in the {@link ProductViewActivity} activity to present product thumbnails.
  */
 public class ProductImageAdapter extends RecyclerView.Adapter<ProductImageAdapter.ImageViewHolder> {
 
     private final List<StorageReference> imageRefs;
-    private final product_screen productScreen;
+    private final ProductViewActivity productScreen;
 
     /**
      * Constructs a new ProductImageAdapter.
@@ -30,7 +30,7 @@ public class ProductImageAdapter extends RecyclerView.Adapter<ProductImageAdapte
      * @param imageRefs      List of StorageReference objects pointing to the product images in Firebase Storage.
      * @param productScreen  Context/activity where the images are displayed.
      */
-    public ProductImageAdapter(List<StorageReference> imageRefs, product_screen productScreen) {
+    public ProductImageAdapter(List<StorageReference> imageRefs, ProductViewActivity productScreen) {
         this.imageRefs = imageRefs;
         this.productScreen = productScreen;
     }

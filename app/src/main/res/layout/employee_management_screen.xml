@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -12,11 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:gravity="center"
         android:text="Employee Product Management"
+        android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:gravity="center"
-        android:textColor="@android:color/black" />
+
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="18sp"
+        android:autoSizeStepGranularity="1sp"
+        />
 
     <View
         android:layout_width="match_parent"
@@ -31,9 +36,15 @@
         android:layout_weight="3"
         android:gravity="center"
         android:paddingBottom="16dp"
-        android:text="Hey, name!\n Manage your product catalog efficiently with the options below."
+        android:text="Hey!\n Manage your product catalog efficiently with the options below."
         android:textColor="@android:color/darker_gray"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="18sp"
+        android:autoSizeStepGranularity="1sp"
+        />
 
     <!-- Spacer between greeting and buttons -->
     <View
@@ -49,7 +60,13 @@
         android:backgroundTint="#C1BFFF"
         android:drawableLeft="@drawable/user"
         android:text="Manage Users"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMaxTextSize="18sp"
+        android:autoSizeStepGranularity="1sp"
+        />
 
     <View
         android:layout_width="match_parent"
@@ -66,31 +83,43 @@
         android:drawableLeft="@drawable/file"
         android:text=" Import CSV"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMaxTextSize="18sp"
+        android:autoSizeStepGranularity="1sp"
+        />
 
     <!-- Spacer between buttons -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"/>
+        android:layout_weight="0.5" />
 
     <!-- Filter and Edit Products Button -->
     <Button
-        android:id="@+id/btnFilterAndEditProducts"
+        android:id="@+id/btnApproveSuggestedImages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
         android:backgroundTint="@android:color/holo_green_light"
-        android:drawableLeft="@drawable/edit"
-        android:text=" Filter &amp; Edit Products"
+        android:drawableLeft="@drawable/image_small"
+        android:text=" Approve Suggested Images"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMaxTextSize="18sp"
+        android:autoSizeStepGranularity="1sp"
+        />
 
     <!-- Spacer between buttons -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"/>
+        android:layout_weight="0.5" />
 
     <!-- Add New Item Button -->
     <Button
@@ -102,12 +131,18 @@
         android:drawableLeft="@drawable/avocado"
         android:text=" Edit Produce Mappings"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMaxTextSize="18sp"
+        android:autoSizeStepGranularity="1sp"
+        />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"/>
+        android:layout_weight="0.5" />
 
     <Button
         android:id="@+id/btnAddNewItem"
@@ -116,9 +151,15 @@
         android:layout_weight="2"
         android:backgroundTint="@android:color/holo_orange_dark"
         android:drawableLeft="@drawable/add"
-        android:text=" Add New Item"
+        android:text=" Add New Product"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMaxTextSize="18sp"
+        android:autoSizeStepGranularity="1sp"
+        />
 
     <!-- Approve Suggested Images Button -->
     <View
@@ -129,14 +170,22 @@
 
     <!-- Spacer between buttons and footer -->
     <Button
-        android:id="@+id/btnApproveSuggestedImages"
+        android:id="@+id/btnDeleteProduct"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
         android:backgroundTint="@android:color/holo_red_light"
-        android:text=" Approve Suggested Images"
+        android:drawableLeft="@drawable/x"
+        android:text=" Delete Product"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMaxTextSize="18sp"
+        android:autoSizeStepGranularity="1sp"
+        />
+
 
     <View
         android:layout_width="match_parent"

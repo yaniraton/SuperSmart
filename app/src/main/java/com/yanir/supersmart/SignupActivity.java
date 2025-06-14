@@ -10,21 +10,19 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.functions.FirebaseFunctions;
 
 import java.util.Collections;
 
 /**
- * signup_screen is the user registration screen for the SuperSmart app.
+ * SignupActivity is the user registration screen for the SuperSmart app.
  * <p>
  * This Activity allows new users to create an account by entering their email, password,
  * and display name. It handles user input, validates the registration data, interacts with
  * the AuthManager for Firebase Authentication, and sets up the display name via a Firebase Function.
  * </p>
  */
-public class signup_screen extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword, etConfirmPassword, etDisplayName;
     private Button btnSignUp;
@@ -75,7 +73,7 @@ public class signup_screen extends AppCompatActivity {
             authManager.register(email, password, task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(this, "Signup successful!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, login_screen.class)); // Make sure this class exists
+                    startActivity(new Intent(this, LoginActivity.class)); // Make sure this class exists
                     setDisplayName(etDisplayName.getText().toString().trim());
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -89,7 +87,7 @@ public class signup_screen extends AppCompatActivity {
         });
 
         tvLoginFooter.setOnClickListener(v -> {
-            startActivity(new Intent(this, login_screen.class));
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
     }

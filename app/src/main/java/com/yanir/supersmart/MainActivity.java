@@ -30,9 +30,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
-import java.io.IOException;
-import com.yanir.supersmart.GeminiManager;
-import com.yanir.supersmart.GeminiCallback;
 
 /**
  * MainActivity serves as the primary entry point of the application.
@@ -90,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (snapshot.exists()) {
-                                    Intent intent = new Intent(MainActivity.this, product_screen.class);
+                                    Intent intent = new Intent(MainActivity.this, ProductViewActivity.class);
                                     intent.putExtra("barcode", scannedBarcode);
                                     startActivity(intent);
                                 } else {
@@ -131,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
                     if (result) {
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri);
-                            String prompt = "IYou are given a photo of a fruit or vegetable. You must identify it and return only its name, using one of the following known English names exactly: zucchini, eggplant, hot green pepper, dill, red pepper, yellow pepper, hot red pepper, melon, watermelon, onion, purple onion, kohlrabi, potato, dry garlic, pumpkin, packed potato, packed red potato, packed corn, kiwi, tomato, cherry tomato, cucumber, apple golden, apple hermon, apple granny smith, pear, white peach, red plum, red nectarine, orange, pomelo, lemon, banana, black grapes, apricot, red beet, lettuce, jerusalem artichoke, white cabbage, packed cilantro, celery, packed green onion, packed cherries, packed mushrooms, avocado, sweet potato, purple cabbage, white plum, green almonds, mango, clementine, fennel, persimmon, grapefruit, pomelit, baby leaves, yellow date, pomegranate, carrot, mint, cauliflower, parsley, loquat, guava, ginger, strawberries, pineapple, fresh figs, prickly pear, radish, broccoli, ripe avocado pack, white grapes, turnip, coconut, passionfruit.\n" +
+                            String prompt = "You are given a photo of a fruit or vegetable. You must identify it and return only its name, using one of the following known English names exactly as listed, but with all spaces removed. For example, return redpepper instead of red pepper.\n" +
+                                    "Use one of these names, with all spaces removed: zucchini, eggplant, hot green pepper, dill, red pepper, yellow pepper, hot red pepper, melon, watermelon, onion, purple onion, kohlrabi, potato, dry garlic, pumpkin, packed potato, packed red potato, packed corn, kiwi, tomato, cherry tomato, cucumber, apple golden, apple hermon, apple granny smith, pear, white peach, red plum, red nectarine, orange, pomelo, lemon, banana, black grapes, apricot, red beet, lettuce, jerusalem artichoke, white cabbage, packed cilantro, celery, packed green onion, packed cherries, packed mushrooms, avocado, sweet potato, purple cabbage, white plum, green almonds, mango, clementine, fennel, persimmon, grapefruit, pomelit, baby leaves, yellow date, pomegranate, carrot, mint, cauliflower, parsley, loquat, guava, ginger, strawberries, pineapple, fresh figs, prickly pear, radish, broccoli, ripe avocado pack, white grapes, turnip, coconut, passionfruit.\n" +
                                     "If the item does not match any of these exactly, return the phrase: `unknown_fruit`. Do not return anything else. Use only lowercase, no punctuation or extra words.";
                             GeminiManager.getInstance().sendTextWithPhotoPrompt(prompt, bitmap, new GeminiCallback() {
                                 @Override
@@ -144,9 +142,9 @@ public class MainActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     if (snapshot.exists()) {
-                                                        String mappedBarcode = snapshot.getValue(String.class); // "31"
-                                                        Intent intent = new Intent(MainActivity.this, product_screen.class);
-                                                        intent.putExtra("barcode", mappedBarcode);
+                                                        Long mappedBarcode = snapshot.getValue(Long.class); // "31"
+                                                        Intent intent = new Intent(MainActivity.this, ProductViewActivity.class);
+                                                        intent.putExtra("barcode", mappedBarcode+"");
                                                         startActivity(intent);
                                                     } else {
                                                         Toast.makeText(MainActivity.this, "Unknown product: " + identifiedName, Toast.LENGTH_SHORT).show();
@@ -315,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
         AuthManager authManager = AuthManager.getInstance();
         if (authManager.getCurrentUser() == null) {
             // Not logged in – go to login screen
-            Intent intent = new Intent(this, login_screen.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         } else {
             authManager.isAdmin(authManager.getCurrentUser().getUid(), new ValueEventListener() {

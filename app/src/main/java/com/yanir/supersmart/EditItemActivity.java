@@ -7,16 +7,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
@@ -25,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
  * If launched with a barcode, the activity loads existing product details for editing.
  * Otherwise, it allows adding a new product with a scanned barcode.
  */
-public class EditItem extends AppCompatActivity {
+public class EditItemActivity extends AppCompatActivity {
 
     /**
      * Request code for starting the barcode scanning activity.
@@ -62,7 +57,7 @@ public class EditItem extends AppCompatActivity {
             // Add mode
             btnScanBarcode.setVisibility(View.VISIBLE);
             btnScanBarcode.setOnClickListener(v -> {
-                Intent intent = new Intent(EditItem.this, BarcodeScan.class);
+                Intent intent = new Intent(EditItemActivity.this, BarcodeScan.class);
                 startActivityForResult(intent, BARCODE_SCAN_REQUEST);
             });
         }
@@ -84,7 +79,7 @@ public class EditItem extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    Toast.makeText(EditItem.this, "Failed to load product", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditItemActivity.this, "Failed to load product", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -98,7 +93,7 @@ public class EditItem extends AppCompatActivity {
             try {
                 price = Float.parseFloat(etPrice.getText().toString().trim());
             } catch (NumberFormatException e) {
-                Toast.makeText(EditItem.this, "Invalid price", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditItemActivity.this, "Invalid price", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -106,8 +101,8 @@ public class EditItem extends AppCompatActivity {
 
             DB.getInstance().getProduct(code)
                 .setValue(product)
-                .addOnSuccessListener(unused -> Toast.makeText(EditItem.this, "Product saved!", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(EditItem.this, "Save failed", Toast.LENGTH_SHORT).show());
+                .addOnSuccessListener(unused -> Toast.makeText(EditItemActivity.this, "Product saved!", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(EditItemActivity.this, "Save failed", Toast.LENGTH_SHORT).show());
         });
     }
 

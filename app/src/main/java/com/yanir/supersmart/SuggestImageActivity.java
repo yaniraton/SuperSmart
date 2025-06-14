@@ -1,39 +1,31 @@
 package com.yanir.supersmart;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.yanir.supersmart.AuthManager;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-import android.os.Bundle;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 /**
  * Activity that allows users to suggest an image for a product by either capturing a photo using the camera
@@ -49,6 +41,8 @@ public class SuggestImageActivity extends AppCompatActivity {
     private File photoFile;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     private ActivityResultLauncher<Intent> cameraLauncher;
+    private AlertDialog uploadingDialog;
+    private Button btnUploadImage;
 
     /**
      * Initializes the activity, sets up UI event listeners, and configures activity result launchers
@@ -64,7 +58,7 @@ public class SuggestImageActivity extends AppCompatActivity {
         Button btnReplaceImage = findViewById(R.id.btnReplaceImage);
         btnReplaceImage.setOnClickListener(v -> showImageChoiceSheet());
 
-        Button btnUploadImage = findViewById(R.id.btnUploadImage);
+        btnUploadImage = findViewById(R.id.btnUploadImage);
         btnUploadImage.setOnClickListener(v -> uploadSelectedImage());
 
         Button btnCancel = findViewById(R.id.btnCancel);
@@ -96,6 +90,16 @@ public class SuggestImageActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    private void showUploadingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Uploading image...");
+        ProgressBar progressBar = new ProgressBar(this);
+        builder.setView(progressBar);
+        builder.setCancelable(false);
+        uploadingDialog = builder.create();
+        uploadingDialog.show();
     }
 
     /**
@@ -184,12 +188,14 @@ public class SuggestImageActivity extends AppCompatActivity {
             return;
         }
 
+        showUploadingDialog();
+        btnUploadImage.setEnabled(false);
+
         String uid = AuthManager.getInstance().getCurrentUser().getUid();
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String random = java.util.UUID.randomUUID().toString().substring(0, 6);
         String filename = uid + "_" + timestamp + "_" + random + ".jpg";
-        StorageReference storageRef = FirebaseStorage.getInstance()
-                .getReference()
+        StorageReference storageRef = DB.getInstance().getStorage()
                 .child("Products")
                 .child(barcode)
                 .child("suggestions")
@@ -197,10 +203,17 @@ public class SuggestImageActivity extends AppCompatActivity {
 
         storageRef.putFile(selectedImageUri)
                 .addOnSuccessListener(taskSnapshot -> {
+                    if (uploadingDialog != null && uploadingDialog.isShowing()) {
+                        uploadingDialog.dismiss();
+                    }
                     Toast.makeText(this, "Upload successful! Awaiting admin approval.", Toast.LENGTH_LONG).show();
-                    finish(); // optionally return to product screen
+                    finish();
                 })
                 .addOnFailureListener(e -> {
+                    if (uploadingDialog != null && uploadingDialog.isShowing()) {
+                        uploadingDialog.dismiss();
+                    }
+                    btnUploadImage.setEnabled(true);
                     Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }

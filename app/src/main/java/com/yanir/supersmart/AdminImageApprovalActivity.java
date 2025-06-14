@@ -4,24 +4,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.functions.FirebaseFunctions;
-import com.google.firebase.functions.HttpsCallableResult;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 /**
  * Activity for administrators to review and manage user-submitted image suggestions.
@@ -80,8 +72,7 @@ public class AdminImageApprovalActivity extends AppCompatActivity {
     private void loadSuggestedImagesForBarcode(String barcode) {
         Toast.makeText(this, "Loading images for barcode: " + barcode, Toast.LENGTH_SHORT).show();
 
-        StorageReference suggestionsRef = FirebaseStorage.getInstance()
-                .getReference()
+        StorageReference suggestionsRef = DB.getInstance().getStorage()
                 .child("Products")
                 .child(barcode)
                 .child("suggestions");

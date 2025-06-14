@@ -7,19 +7,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.AuthResult;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import com.yanir.supersmart.AuthManager;
 
 /**
  * Activity responsible for handling user login in the SuperSmart app.
@@ -27,7 +20,13 @@ import com.yanir.supersmart.AuthManager;
  * and redirects to the main screen upon successful login.
  * Also provides a link to navigate to the sign-up screen.
  */
-public class login_screen extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
+
+    EditText etEmail;
+    EditText etPassword;
+    Button btnLogin;
+    TextView tvSignUpFooter;
+    AuthManager authManager;
 
     /**
      * Called when the activity is starting. Initializes UI components and sets up login logic.
@@ -39,12 +38,12 @@ public class login_screen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
 
-        EditText etEmail = findViewById(R.id.etEmail);
-        EditText etPassword = findViewById(R.id.etPassword);
-        Button btnLogin = findViewById(R.id.btnLogin);
-        TextView tvSignUpFooter = findViewById(R.id.tvSignUpFooter);
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        btnLogin = findViewById(R.id.btnLogin);
+        tvSignUpFooter = findViewById(R.id.tvSignUpFooter);
 
-        AuthManager authManager = AuthManager.getInstance();
+        authManager = AuthManager.getInstance();
 
         btnLogin.setOnClickListener(v -> {
             String email = etEmail.getText().toString().trim();
@@ -64,7 +63,7 @@ public class login_screen extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             // Redirect to the main activity after login
-                            Intent intent = new Intent(login_screen.this, MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
@@ -72,7 +71,7 @@ public class login_screen extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(login_screen.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
@@ -83,7 +82,7 @@ public class login_screen extends AppCompatActivity {
 
         // Navigate to sign-up screen if user clicks the footer text
         tvSignUpFooter.setOnClickListener(v -> {
-            startActivity(new Intent(this, signup_screen.class));
+            startActivity(new Intent(this, SignupActivity.class));
             finish();
         });
     }

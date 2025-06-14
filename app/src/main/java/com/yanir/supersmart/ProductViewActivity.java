@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,10 +28,9 @@ import java.util.List;
  * Retrieves product data from Firebase Realtime Database and loads product images from Firebase Storage.
  * Also provides admin functionality for editing the product and suggesting new product images.
  */
-public class product_screen extends AppCompatActivity {
+public class ProductViewActivity extends AppCompatActivity {
 
     final String TAG = "ProductScreen";
-    ImageView ivProductImage;
     TextView tvProductName;
     TextView tvProductPrice;
     TextView tvProductDescription;
@@ -81,7 +79,7 @@ public class product_screen extends AppCompatActivity {
                 if (Boolean.TRUE.equals(isAdmin)) {
                     btnEditProduct.setVisibility(View.VISIBLE);
                     btnEditProduct.setOnClickListener(v -> {
-                        Intent intent = new Intent(product_screen.this, EditItem.class);
+                        Intent intent = new Intent(ProductViewActivity.this, EditItemActivity.class);
                         intent.putExtra("barcode", product.getBarcode());
                         startActivity(intent);
                     });
@@ -95,7 +93,7 @@ public class product_screen extends AppCompatActivity {
         });
         findViewById(R.id.fabAddPhoto).setOnClickListener(v -> {
             if (product != null) {
-                Intent intent = new Intent(product_screen.this, SuggestImageActivity.class);
+                Intent intent = new Intent(ProductViewActivity.this, SuggestImageActivity.class);
                 intent.putExtra("barcode", product.getBarcode());
                 startActivity(intent);
             } else {
@@ -136,7 +134,7 @@ public class product_screen extends AppCompatActivity {
                         .addOnSuccessListener(listResult -> {
                             imageRefs.clear();
                             imageRefs.addAll(listResult.getItems());
-                            rvProductImages.setAdapter(new ProductImageAdapter(imageRefs, product_screen.this));
+                            rvProductImages.setAdapter(new ProductImageAdapter(imageRefs, ProductViewActivity.this));
                             Log.d(TAG, "Loaded " + imageRefs.size() + " approved images.");
                         })
                         .addOnFailureListener(e -> Log.e(TAG, "Error listing approved images: " + e.getMessage()));
